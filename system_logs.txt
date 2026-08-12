@@ -1,0 +1,464 @@
+=== SYSTEM ANOMALY LOG REPORT ===
+
+Time: 2026-04-21 19:00:46.274637
+CPU: 0.0%
+RAM: 67.0%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:00:48.283305
+CPU: 32.6%
+RAM: 67.3%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:00:50.297361
+CPU: 24.6%
+RAM: 67.6%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:05:15.629077
+CPU: 4.2%
+RAM: 66.0%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:05:17.635525
+CPU: 13.8%
+RAM: 66.1%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:05:23.669606
+CPU: 29.5%
+RAM: 67.5%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:05:29.704349
+CPU: 35.5%
+RAM: 69.3%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:05:51.836815
+CPU: 39.3%
+RAM: 71.2%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:08:48.862577
+CPU: 40.1%
+RAM: 72.3%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:08:50.880305
+CPU: 25.8%
+RAM: 72.6%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:08:52.889239
+CPU: 19.9%
+RAM: 72.8%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:08:56.904343
+CPU: 32.5%
+RAM: 72.8%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:08:58.911683
+CPU: 42.4%
+RAM: 73.7%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:00.918879
+CPU: 47.5%
+RAM: 74.9%
+Disk: 52.2%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:02.928807
+CPU: 38.4%
+RAM: 76.9%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:04.936095
+CPU: 23.2%
+RAM: 76.8%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:06.944863
+CPU: 18.9%
+RAM: 77.1%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:08.955720
+CPU: 25.4%
+RAM: 77.0%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:19.021350
+CPU: 36.9%
+RAM: 76.5%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:21.031035
+CPU: 42.6%
+RAM: 76.6%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:29.075359
+CPU: 30.8%
+RAM: 76.2%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:31.084754
+CPU: 28.2%
+RAM: 76.3%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:09:37.111381
+CPU: 22.8%
+RAM: 75.6%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:10:19.309773
+CPU: 24.3%
+RAM: 74.8%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:10:21.316467
+CPU: 29.1%
+RAM: 75.0%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:10:23.324272
+CPU: 59.4%
+RAM: 75.2%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:10:25.330157
+CPU: 29.9%
+RAM: 75.5%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:10:27.337647
+CPU: 36.2%
+RAM: 76.5%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:10:35.385256
+CPU: 11.7%
+RAM: 76.5%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+Time: 2026-04-21 19:10:39.410780
+CPU: 27.4%
+RAM: 76.7%
+Disk: 52.8%
+Issue: Unusual system behavior detected -> Further investigation required.
+----------------------------------------
+
+=== SYSTEM ANOMALY LOG REPORT ===
+
+Time: 2026-04-22 14:25:00.742309
+Severity: LOW
+CPU: 0.0%
+RAM: 59.3%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:02.759641
+Severity: LOW
+CPU: 28.7%
+RAM: 59.2%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:04.774465
+Severity: LOW
+CPU: 27.8%
+RAM: 59.2%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:06.791910
+Severity: LOW
+CPU: 20.7%
+RAM: 59.0%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:08.803771
+Severity: LOW
+CPU: 18.5%
+RAM: 59.0%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:10.818564
+Severity: LOW
+CPU: 23.0%
+RAM: 58.6%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:12.838130
+Severity: LOW
+CPU: 13.6%
+RAM: 58.6%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:14.854639
+Severity: LOW
+CPU: 26.6%
+RAM: 58.4%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:16.873028
+Severity: LOW
+CPU: 13.4%
+RAM: 58.3%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:18.885398
+Severity: LOW
+CPU: 15.1%
+RAM: 58.2%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:24.940101
+Severity: LOW
+CPU: 26.1%
+RAM: 58.3%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:28.974937
+Severity: LOW
+CPU: 19.0%
+RAM: 58.2%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:30.987850
+Severity: LOW
+CPU: 19.2%
+RAM: 58.2%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:25:35.017656
+Severity: LOW
+CPU: 5.7%
+RAM: 58.2%
+Disk: 52.3%
+Processes: 257
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:26:05.235407
+Severity: LOW
+CPU: 14.4%
+RAM: 57.9%
+Disk: 52.3%
+Processes: 256
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:26:19.335643
+Severity: LOW
+CPU: 26.0%
+RAM: 57.5%
+Disk: 52.3%
+Processes: 254
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:26:21.352973
+Severity: LOW
+CPU: 29.0%
+RAM: 57.8%
+Disk: 52.3%
+Processes: 255
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:26:53.613375
+Severity: LOW
+CPU: 20.1%
+RAM: 57.3%
+Disk: 52.3%
+Processes: 254
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:28:06.189041
+Severity: LOW
+CPU: 26.9%
+RAM: 57.2%
+Disk: 52.3%
+Processes: 254
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:30:13.206559
+Severity: LOW
+CPU: 26.5%
+RAM: 57.0%
+Disk: 52.3%
+Processes: 253
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:31:09.693807
+Severity: LOW
+CPU: 26.6%
+RAM: 56.4%
+Disk: 52.3%
+Processes: 253
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:31:11.749782
+Severity: MEDIUM
+CPU: 30.9%
+RAM: 56.1%
+Disk: 52.3%
+Processes: 253
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:31:13.766107
+Severity: LOW
+CPU: 20.4%
+RAM: 56.1%
+Disk: 52.3%
+Processes: 253
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:31:56.116973
+Severity: LOW
+CPU: 15.9%
+RAM: 55.9%
+Disk: 52.3%
+Processes: 253
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:33:59.133291
+Severity: LOW
+CPU: 2.3%
+RAM: 56.1%
+Disk: 52.3%
+Processes: 251
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:34:07.215252
+Severity: LOW
+CPU: 22.3%
+RAM: 56.2%
+Disk: 52.3%
+Processes: 251
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:34:53.595850
+Severity: LOW
+CPU: 16.9%
+RAM: 56.1%
+Disk: 52.3%
+Processes: 251
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:34:57.632425
+Severity: LOW
+CPU: 15.6%
+RAM: 56.3%
+Disk: 52.3%
+Processes: 251
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:34:59.650644
+Severity: LOW
+CPU: 17.1%
+RAM: 56.3%
+Disk: 52.3%
+Processes: 251
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+Time: 2026-04-22 14:35:01.666895
+Severity: LOW
+CPU: 4.4%
+RAM: 56.3%
+Disk: 52.3%
+Processes: 251
+Network: Sent=0 | Recv=0
+Issue: Unusual system behavior detected -> Further investigation required.
+--------------------------------------------------
+
+ SUMMARY 
+Total anomalies detected: 30
+
+=== SYSTEM ANOMALY LOG REPORT ===
+
+
+ SUMMARY 
+Total anomalies detected: 0
