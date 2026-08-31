@@ -4,14 +4,13 @@ from sklearn.preprocessing import StandardScaler
 
 df = pd.read_csv("system_data.csv")
 df['Timestamp'] = pd.to_datetime(df['Timestamp'])
-df = df.sort_values(by='Timestamp')
+df = df.sort_values(by='Timestamp').reset_index(drop=True)
 
 df['cpu_diff'] = df['CPU_Usage'].diff()
 df['network_total'] = df['Bytes_Sent'] + df['Bytes_Recv']
-
 df['cpu_rolling_mean'] = df['CPU_Usage'].rolling(window=5).mean()
 
-df = df.fillna(0)
+df = df.dropna().reset_index(drop = True)
 
 features = [
     'CPU_Usage',
@@ -30,14 +29,20 @@ X = df[features]
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-
 model = IsolationForest(contamination = 0.05,random_state = 42)
 model.fit(X_scaled)
 
-df["Anomaly"] = model.predict(X_scaled)
+raw_predictions = model.predict(X_scaled)
 
-df["Anomaly"] = df["Anomaly"].map({1: 0, -1: 1})
+
+df["Anomaly"] = [1 if pred == -1 else 0 for pred in raw_predictions]
+
 df.to_csv("system_data_with_anomalies.csv", index = False)
 
 print("Isolation Forest model trained successfully!")
-print("Anomalies detected:", df["Anomaly"].sum())
+print(f"Total Samples Analyzed: {len(df)}")
+print(f"Anomalies detected: {df["Anomaly"].sum()}")
+
+if df["Anomaly"].sum() > 0:
+    print("\n🔍 Snippet of Detected Anomalies:")
+    print(df[df["Anomaly"] == 1][["Timestamp", "CPU_Usage", "RAM_Usage", "Anomaly"]].head(5))

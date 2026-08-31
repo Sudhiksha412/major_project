@@ -462,3 +462,131 @@ Total anomalies detected: 30
 
  SUMMARY 
 Total anomalies detected: 0
+
+=== SYSTEM ANOMALY LOG REPORT ({pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}) ===
+
+Time: 2026-08-31 10:20:47
+Severity: HIGH
+CPU: 20.8%
+RAM: 79.9%
+Disk: 64.7%
+Processes: 284
+Network Total: 557020 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:20:49
+Severity: HIGH
+CPU: 30.2%
+RAM: 80.5%
+Disk: 64.7%
+Processes: 284
+Network Total: 1647870 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:26:25
+Severity: HIGH
+CPU: 44.4%
+RAM: 80.5%
+Disk: 64.7%
+Processes: 282
+Network Total: 344489 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:26:27
+Severity: HIGH
+CPU: 55.7%
+RAM: 81.3%
+Disk: 64.7%
+Processes: 284
+Network Total: 321312 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:26:29
+Severity: LOW
+CPU: 38.2%
+RAM: 81.4%
+Disk: 64.7%
+Processes: 284
+Network Total: 356135 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:26:31
+Severity: LOW
+CPU: 37.9%
+RAM: 81.7%
+Disk: 64.7%
+Processes: 284
+Network Total: 391993 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:01
+Severity: MEDIUM
+CPU: 48.0%
+RAM: 79.5%
+Disk: 64.7%
+Processes: 283
+Network Total: 146018 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:03
+Severity: MEDIUM
+CPU: 66.1%
+RAM: 80.0%
+Disk: 64.7%
+Processes: 285
+Network Total: 73249 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:05
+Severity: LOW
+CPU: 31.4%
+RAM: 80.6%
+Disk: 64.7%
+Processes: 287
+Network Total: 99893 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:09
+Severity: MEDIUM
+CPU: 53.4%
+RAM: 80.1%
+Disk: 64.7%
+Processes: 287
+Network Total: 79498 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:11
+Severity: MEDIUM
+CPU: 48.6%
+RAM: 79.9%
+Disk: 64.7%
+Processes: 289
+Network Total: 152588 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:13
+Severity: LOW
+CPU: 33.9%
+RAM: 80.2%
+Disk: 64.7%
+Processes: 289
+Network Total: 231604 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:55
+Severity: LOW
+CPU: 39.2%
+RAM: 80.9%
+Disk: 64.7%
+Processes: 288
+Network Total: 252044 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:29:57
+Severity: LOW
+CPU: 30.4%
+RAM: 80.7%
+Disk: 64.7%
+Processes: 288
+Network Total: 209630 Bytes
+--------------------------------------------------
+Time: 2026-08-31 10:30:23
+Severity: MEDIUM
+CPU: 67.1%
+RAM: 81.9%
+Disk: 64.7%
+Processes: 287
+Network Total: 20183 Bytes
+--------------------------------------------------
+
+ REPORT SUMMARY 
+Total critical anomalies recorded in this session: 15
+==================================================
+
