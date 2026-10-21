@@ -2,9 +2,7 @@ import pandas as pd
 import psutil
 import time
 import os
-import sys 
 from datetime import datetime
-
 data = []
 print("Starting System Data Collection...")
 print("TIP: Press 'Ctrl + C' anytime to save and exit.")
@@ -12,7 +10,7 @@ print("TIP: If you are running a heavy app/stress test right now, remember the s
 
 prev_net = psutil.net_io_counters()
 
-TOTAL_SAMPLES = 300
+TOTAL_SAMPLES = 1000
 SLEEP_INTERVAL = 2.0 
 
 try:
