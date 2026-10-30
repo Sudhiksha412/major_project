@@ -1,4 +1,4 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame ,useLoader  } from "@react-three/fiber";
 import {
   OrbitControls,
   Float,
@@ -7,7 +7,8 @@ import {
   Line,
 } from "@react-three/drei";
 import { useRef, useMemo } from "react";
-import * as THREE from "three";
+import * as THREE from "three"; 
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
 /* ================================================= */
 /* MAIN INFRASTRUCTURE */
@@ -104,6 +105,14 @@ function AICore() {
 /* ================================================= */
 function InfrastructureNode({ position, label, value, type }) {
   const group = useRef();
+  let gltf = null;
+
+   try {
+    gltf = useLoader(GLTFLoader, `/models/${label.toLowerCase()}.glb`);
+  } catch (error) {
+    console.error(`Asset Engine: Failed to resolve model pathway for ${label}:`, error);
+  }
+
 
   useFrame((state) => {
     if (!group.current) return;
@@ -111,33 +120,40 @@ function InfrastructureNode({ position, label, value, type }) {
   });
 
   return (
-      <group ref={group} position={position}>
-        <mesh>
-          <boxGeometry args={[1.15, 1.15, 1.15]} />
-          <meshStandardMaterial
-            color="#10152a"
-            emissive="#1e1b4b"
-            emissiveIntensity={0.6}
-            metalness={0.8}
-            roughness={0.2}
-          />
-        </mesh>
+    <group ref={group} position={position}>
+      {gltf ? (
+        <primitive object={gltf.scene.clone()} scale={0.5} />
+      ) : (
+         <>
+      <mesh>
+        <boxGeometry args={[1.15, 1.15, 1.15]} />
+        <meshStandardMaterial
+          color="#10152a"
+          emissive="#6366f1"
+          emissiveIntensity={1.2}
+          metalness={0.9}
+          roughness={0.1}
+        />
+      </mesh>
 
-        <mesh scale={1.03}>
-          <boxGeometry args={[1.15, 1.15, 1.15]} />
-          <meshBasicMaterial color="#a78bfa" wireframe transparent opacity={0.4} />
-        </mesh>
+      <mesh scale={1.05}>
+        <boxGeometry args={[1.15, 1.15, 1.15]} />
+        <meshBasicMaterial color="#a78bfa" wireframe transparent opacity={0.6} />
+      </mesh>
+      </>
+      )}
 
-        <Html center>
-          <div className="node-label">
-            <span className="node-type">{type}</span>
-            <strong>{label}</strong>
-            <span className="node-value">{value}</span>
-          </div>
-        </Html>
-      </group>
+      <Html center>
+        <div className="node-label">
+          <span className="node-type">{type}</span>
+          <strong>{label}</strong>
+          <span className="node-value">{value}</span>
+        </div>
+      </Html>
+    </group>
   );
 }
+
 
 /* ================================================= */
 /* DATA CONNECTION */

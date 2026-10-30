@@ -1436,3 +1436,63 @@ nav {
   margin-bottom: 6px;
   line-height: 1.4;
 }
+
+
+.dashboard-grid-view {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.extended-telemetry-box {
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.extended-telemetry-box h4 {
+  color: #00ff88;
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.telemetry-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.95rem;
+}
+
+.telemetry-row span {
+  color: #94a3b8;
+}
+
+.telemetry-row strong {
+  color: #e2e8f0;
+}
+
+.custom-prediction-view, .outlier-status-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.big-stat-number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.info-text {
+  color: #64748b;
+  font-size: 0.85rem;
+  display: block;
+  margin-top: 10px;
+}

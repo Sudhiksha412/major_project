@@ -9,6 +9,7 @@ print("TIP: Press 'Ctrl + C' anytime to save and exit.")
 print("TIP: If you are running a heavy app/stress test right now, remember the sample numbers to label them later!\n")
 
 prev_net = psutil.net_io_counters()
+psutil.cpu_percent(interval=None)
 
 TOTAL_SAMPLES = 1000
 SLEEP_INTERVAL = 2.0 
@@ -22,8 +23,8 @@ try:
         disk = psutil.disk_usage(os.path.abspath(os.sep)).percent
         
         net = psutil.net_io_counters()
-        bytes_sent = net.bytes_sent - prev_net.bytes_sent
-        bytes_recv = net.bytes_recv - prev_net.bytes_recv
+        bytes_sent = max(0 ,net.bytes_sent - prev_net.bytes_sent)
+        bytes_recv = max(0,net.bytes_recv - prev_net.bytes_recv)
         prev_net = net
         
         process_count = len(psutil.pids())
@@ -49,9 +50,9 @@ if data:
         "Bytes_Sent", "Bytes_Recv", "Process_Count", "Battery_Percent", "Failure_Label"
     ])
     df.to_csv("system_data.csv", index=False)
-    print(f"✅ Dataset saved successfully! Total samples collected: {len(df)}")
+    print(f" Dataset saved successfully! Total samples collected: {len(df)}")
 else:
-    print("❌ No data collected. File not saved.")
+    print("No data collected. File not saved.")
 
 
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import {
   Activity,
   BrainCircuit,
@@ -189,7 +189,11 @@ function Dashboard({ system, triggerRefresh }) {
         </div>
 
         <div className="visual-layout">
-          <div className="three-container"><Infrastructure3D /></div>
+          <div className="three-container">
+            <Suspense fallback={<div style={{ color: '#a78bfa', padding: '20px', fontFamily: 'Space Mono', fontSize: '12px' }}>Loading 3D Core...</div>}>
+            <Infrastructure3D />
+            </Suspense>
+          </div>
           
           <div className="health-panel">
             <div className="panel-heading">
@@ -202,9 +206,9 @@ function Dashboard({ system, triggerRefresh }) {
               <div style={{ width: system?.agent_active_alert ? "72%" : "96%", backgroundColor: system?.agent_active_alert ? '#ff4a4a' : '#00ff88' }}></div>
             </div>
 
-            <HealthRow label="CPU Load Core" value={system ? `${system.cpu}%` : "--"} state={system?.cpu > 70 ? "Stress Mode" : "Stable Bounds"} />
-            <HealthRow label="RAM Capacity" value={system ? `${system.ram}%` : "--"} state={system?.ram > 80 ? "Throttling" : "Healthy Profile"} />
-            <HealthRow label="Disk Profiles" value={system ? `${system.disk}%` : "--"} state="Optimal Allocation" />
+            <HealthRow label="CPU Load Core" value={system ? `${system.CPU_Usage}%` : "--"} state={system?.CPU_Usage > 70 ? "Stress Mode" : "Stable Bounds"} />
+            <HealthRow label="RAM Capacity" value={system ? `${system.RAM_Usage}%` : "--"} state={system?.RAM_Usage > 80 ? "Throttling" : "Healthy Profile"} />
+            <HealthRow label="Disk Profiles" value={system ? `${system.Disk_Usage}%` : "--"} state="Optimal Allocation" />
             
             <div className="prediction-box" style={{ borderColor: system?.agent_active_alert ? '#ff4a4a' : '#1e293b' }}>
               <div className="prediction-icon"><BrainCircuit size={20} /></div>
@@ -233,30 +237,75 @@ function Dashboard({ system, triggerRefresh }) {
 
 function LiveMonitor({ system }) {
   return (
-    <div className="coming-soon">
-      <Cpu size={42} />
-      <h3>Real-time Signal Telemetry</h3>
-      <p>CPU: {system?.cpu}% | RAM: {system?.ram}% | Disk: {system?.disk}%</p>
+    <div className="dashboard-grid-view">
+      <section className="metrics">
+        <MetricCard icon={<Cpu />} title="Processor Load" value={system ? `${system.CPU_Usage}%` : "--"} status="REALTIME" />
+        <MetricCard icon={<Activity />} title="Memory Allocation" value={system ? `${system.RAM_Usage}%` : "--"} status="LIVE" />
+        <MetricCard icon={<HardDrive />} title="Storage Sectors" value={system ? `${system.Disk_Usage}%` : "--"} status="MOUNTED" />
+      </section>
+
+      <div className="extended-telemetry-box">
+        <h4>SIGNAL TELEMETRY MATRIX STRINGS</h4>
+        <div className="telemetry-row">
+          <span>Network Inbound:</span>
+          <strong>{system ?.Bytes_Recv ? `${(system.Bytes_Recv / (1024 * 1024)).toFixed(2)} MB` : "--"}</strong>
+        </div>
+        <div className="telemetry-row">
+          <span>Network Outbound:</span>
+          <strong>{system ?.Bytes_Sent ? `${(system.Bytes_Sent / (1024 * 1024)).toFixed(2)} MB` : "--"}</strong>
+        </div>
+        <div className="telemetry-row">
+          <span>Active Process Threads:</span>
+          <strong>{system ? system.Process_Count : "--"} count</strong>
+        </div>
+      </div>
     </div>
   );
 }
 
 function Predictions({ system }) {
   return (
-    <div className="coming-soon">
-      <BrainCircuit size={42} />
-      <h3>HistGradientBoosting Lookahead Horizon</h3>
-      <p>Predicted Status: {system?.agent_active_alert ? "🚨 ANOMALY RISK IN STEPS [-10]" : "✅ CLEAR FORECAST"}</p>
+    <div className="extended-telemetry-box custom-prediction-view">
+      <div className="panel-title">
+        <BrainCircuit size={22} color="#00ff88" />
+        <span>HISTGRADIENTBOOSTING HORIZON INTERFACE</span>
+      </div>
+      <div className="prediction-status-card">
+        <h3>Current Lookahead State (Steps: -10)</h3>
+        <p className="status-label">
+          Status Check: {system?.agent_active_alert ? (
+            <span style={{ color: '#ff4a4a', fontWeight: 'bold' }}>ANOMALY PROFILE DETECTED</span>
+          ) : (
+            <span style={{ color: '#00ff88' }}>HEALTH SPECTRUM CLEAR</span>
+          )}
+        </p>
+        <small className="info-text">
+          Model dynamically weighs parameters using SHAP value attribution algorithms to parse performance deviations.
+        </small>
+         </div>
     </div>
   );
 }
 
 function Anomalies({ system }) {
   return (
-    <div className="coming-soon">
-      <ShieldAlert size={42} />
-      <h3>Isolation Forest Analysis Layer</h3>
-      <p>Detected Dynamic Outliers: {system?.agent_active_alert ? "1 Active Outlier Signature" : "0 System Outliers"}</p>
+    <div className="extended-telemetry-box">
+      <div className="panel-title">
+        <ShieldAlert size={22} color="#ff4a4a" />
+        <span>ISOLATION FOREST REALTIME OUTLIER LOGS</span>
+      </div>
+      <div className="outlier-status-layout">
+        <div className="big-stat-number" style={{ color: system?.agent_active_alert ? '#ff4a4a' : '#cbd5e1' }}>
+          {system?.agent_active_alert ? "1" : "0"}
+          <span style={{ fontSize: '1rem', display: 'block', color: '#94a3b8' }}>ACTIVE ISOLATION ANOMALIES</span>
+        </div>
+        <div className="outlier-alert-message">{system?.agent_active_alert ? (
+            <p>Machine parameters are currently operating outside learned multi-dimensional statistical boundaries.</p>
+          ) : (
+            <p>All metric vectors match standard operational cluster benchmarks.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

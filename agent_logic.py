@@ -96,19 +96,19 @@ def tool_optimize_cpu():
     cpu_heavy_apps = []
 
     #checking cpu percent of live processes
-    for proc in psutil.process_iter(['pid','name','cpu_percent']):
+    for proc in psutil.process_iter(['pid','name']):
         try:
-            proc.cpu_percent(interval=None)
-            cpu_heavy_apps.append(proc)
+            percent = proc.cpu_percent(interval=None)
+            cpu_heavy_apps.append({'proc': proc, 'initial_pct': percent})
         except (psutil.NoSuchProcess,psutil.AccessDenied):
             continue
 
     heavy_list = []
-    for proc in cpu_heavy_apps:
+    for item in cpu_heavy_apps:
         try:
-            percent = proc.cpu_percent(interval = 0.1)
-            if percent > 5 and proc.name().lower() not in ["System","idle","explorer.exe"]:
-                heavy_list.append({"pid": proc.pid,"name": proc.name(),"cpu" : percent})
+            actual_percent = item['proc'].cpu_percent(interval = 0.05)
+            if actual_percent > 5 and item['proc'].name().lower() not in ["System","idle","explorer.exe"]:
+                heavy_list.append({"pid": item['proc'],"name": item['proc'].name(),"cpu" : actual_percent})
         except:
             continue
 
@@ -116,9 +116,9 @@ def tool_optimize_cpu():
     if not heavy_list:
         return "Info: Your computer is running completely normally right now."
 
-    print("Apps using CPU core capacities:")
+    print("Apps using high CPU capacity: ")
     for idx, proc in enumerate(heavy_list, 1):
-        print(f" [{idx}] App Name: {proc['name']} | CPU Threads Load: {proc['cpu']}% (PID : {proc['pid']})")
+        print(f" [{idx}] App Name: {proc['name']} | CPU Load: {proc['cpu']}% (PID : {proc['pid']})")
 
     user_choice = input("Enter the number [1/2/3] to terminate CPU-heavy process(or type 'skip'): ")
     if user_choice.lower() == "skip" or user_choice not in ['1','2','3']:
@@ -200,41 +200,7 @@ class AgenticAIResolutionEngine:
         self.machine_profile = machine_profile
         print(f"🤖 Agentic AI Engine active for profile: {self.machine_profile}")
 
-    def resolve_system_risk(self, report):
-        print(f"Agent analyzing system risk report...")
-        status = report.get("status", "unknown")
-        reason = report.get("reason", "Unknown")
-        details = report.get("details", "No detailed information provided.")
-
-        execution_result = ""
-        
-        if reason == "RAM_Usage":
-            execution_result = tool_free_ram()
-            
-        elif reason == "CPU_Usage":
-            execution_result = tool_optimize_cpu()
-            
-        elif reason == "Disk_Usage":
-            execution_result = tool_clean_disk_space()
-            
-        elif reason == "Network_Latency":
-            execution_result = tool_reset_network_adapter()
-
-        else:
-            steps = tool_get_troubleshooting_guide(reason)
-            execution_result = f"Manual intervention required. Guide generated: {', '.join(steps)}"
-
-        agent_log(
-            action_type=f"System_Optimization_{reason}", 
-            status="Executed", 
-            details=execution_result
-        )
-
-        return {
-            "status": "success",
-            "reason_analyzed": reason,
-            "tool_output": execution_result
-        }
+  
 
     def call_gemini_brain(self,report):
         if not client:
@@ -245,7 +211,7 @@ class AgenticAIResolutionEngine:
         {json.dumps(report, indent = 2)}
         Analyze the core technical breakdown reason.Respond strictly in the following JSON format:
         {{
-        "explanation":"A short,professional explanation of the problem and its potential impact on system health.",
+        "explanation":"A short,professional,simple layman explanation of the problem and its potential impact on system health.",
         "recommended_tool":"Must be exactly one of these strings:TOOL_RAM,TOOL_CPU,TOOL_DISK,TOOL_NETWORK, or TOOL_NONE",
         "manual_steps": ["Step 1...","Step 2...,"Step 3..."]
         }}"""
@@ -345,7 +311,7 @@ if __name__ == "__main__":
     agent_engine = AgenticAIResolutionEngine(machine_profile="Intel Core i3, 8GB RAM")
 
     simulated_report = {
-         "Future_Anomaly_Predicted": 0,
+        "Future_Anomaly_Predicted": 1,
         "Top_Reason": "RAM_Usage",
         "Dynamic_Impact": "System memory usage is over 85%"
     }
