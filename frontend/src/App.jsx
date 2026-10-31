@@ -23,22 +23,44 @@ function App() {
   const [activePage, setActivePage] = useState("Dashboard");
   const [mobileMenu, setMobileMenu] = useState(false);
   const [system, setSystem] = useState(null);
+  const [logs, setLogs] = useState([]);
+  const [isOnline, setIsOnline] = useState(false);
 
   const fetchSystemData = async () => {
     try {
       const data = await getSystemStatus();
-      if (data) 
+      if (data){ 
       setSystem(data);
+      setIsOnline(true);
+      } else {
+        setIsOnline(false);
+      } 
+
     } catch (error) {
       console.error("API ERROR:", error);
+      setIsOnline(false);
+    }
+  };
+
+  const fetchAuditLogs = async () => {
+    try {
+      const res = await fetch("http://localhost:8000/audit-logs");
+      const data = await res.json();
+      setLogs(data.reverse());
+    } catch (e) {
+      console.error(e);
     }
   };
 
   useEffect(() => {
     fetchSystemData();
-    const interval = setInterval(fetchSystemData, 2000);
+    fetchAuditLogs();
+    const interval = setInterval(() => {
+      fetchSystemData();
+      if (activePage === "System Logs") fetchAuditLogs();
+    }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [activePage]);
 
   const navigation = [
     { name: "Dashboard", icon: LayoutDashboard },
@@ -64,12 +86,13 @@ function App() {
           <div className="brand-core"><BrainCircuit size={24} /></div>
           <div>
             <h1>AI INFRA</h1>
-            <span>COMMAND CENTER</span>
+            <span>USER SUPPORT</span>
           </div>
         </div>
 
-        <div className="system-status">
-          <span className="status-dot"></span>SYSTEM ONLINE
+        <div className={`system-status ${isOnline ? "online" : "offline"}`}>
+          <span className="status-dot"></span>
+          {isOnline ? "SYSTEM ONLINE" : "SERVER UNREACHABLE"}
         </div>
 
         <nav>
@@ -79,6 +102,7 @@ function App() {
               <button
                 key={item.name}
                 className={`nav-item ${activePage === item.name ? "active" : ""}`}
+                disabled={!isOnline && item.name !== "System Logs"}
                 onClick={() => {
                   setActivePage(item.name);
                   setMobileMenu(false);
@@ -107,10 +131,22 @@ function App() {
             <h2>{activePage}</h2>
           </div>
           <div className="top-status">
-            <div><span className="status-dot"></span>Monitoring Active</div>
+            <div>
+              <span className={`status-dot ${isOnline ? "active" : "inactive"}`}></span>
+              {isOnline ? "Monitoring Active" : "Stream Disconnected"}
+            </div>
             <div className="server-id">NODE-01</div>
           </div>
         </header>
+
+        {!isOnline ? (
+          <div className="api-error-fallback">
+            <AlertTriangle size={40} color="#ff4a4a" />
+            <h3>Data Stream Offline</h3>
+            <p>Unable to connect to FastAPI endpoint at <code>http://localhost:8000/system-status</code>. Check backend runtime.</p>
+          </div>
+        ) : (
+          <>
 
         {activePage === "Dashboard" && <Dashboard system={system} triggerRefresh={fetchSystemData} />}
         {activePage === "Live Monitor" && <LiveMonitor system={system} />}
@@ -118,6 +154,8 @@ function App() {
         {activePage === "Anomalies" && <Anomalies system={system} />}
         {activePage === "Agentic AI" && <AgenticAIView system={system} triggerRefresh={fetchSystemData} />}
         {activePage === "System Logs" && <SystemLogs />}
+        </>
+        )}
       </main>
     </div>
   );
@@ -126,8 +164,21 @@ function App() {
 
 function Dashboard({ system, triggerRefresh }) {
   const [actionMessage, setActionMessage] = useState("");
+  const [selectedPid, setSelectedPid] = useState("");
 
   const handleAgentDecision = async (userChoice) => {
+    let payload = { decision: userChoice };
+    
+    if (userChoice === "yes" && ["TOOL_RAM", "TOOL_CPU"].includes(system?.agent_recommended_tool)) {
+      if (!selectedPid) {
+        alert("Please select a target application profile to close safely.");
+        return;
+      }
+      const targetObj = system.agent_candidates.find(c => c.pid === parseInt(selectedPid));
+      payload.target_pid = targetObj.pid;
+      payload.target_name = targetObj.name;
+    }
+
     try {
       const response = await fetch("http://localhost:8000/action-confirm", {
         method: "POST",
@@ -136,12 +187,16 @@ function Dashboard({ system, triggerRefresh }) {
       });
       const data = await response.json();
       setActionMessage(data.result);
+      setSelectedPid("");
       triggerRefresh(); // Fetch latest optimized state metrics
       setTimeout(() => setActionMessage(""), 7000);
     } catch (err) {
       console.error("Action execution routing error:", err);
     }
   };
+
+  const isProcessTool = ["TOOL_RAM", "TOOL_CPU"].includes(system?.agent_recommended_tool);
+
 
   return (
     <div className="dashboard">
@@ -153,6 +208,26 @@ function Dashboard({ system, triggerRefresh }) {
           </div>
           <p className="alert-diagnosis"><strong>Diagnosis:</strong> {system.agent_explanation}</p>
           <p className="alert-action-call">Recommended Core Action Pipeline: <code>{system.agent_recommended_tool}</code></p>
+
+          {isProcessTool && system.agent_candidates?.length > 0 && (
+            <div className="process-safeguard-selection">
+              <h5>Select Target Process to Terminate Safely:</h5>
+              <div className="candidate-list">
+                {system.agent_candidates.map((proc) => (
+                  <label key={proc.pid} className={`candidate-row ${selectedPid === String(proc.pid) ? "selected" : ""}`}>
+                    <input 
+                      type="radio" 
+                      name="candidate-pid" 
+                      value={proc.pid} 
+                      checked={selectedPid === String(proc.pid)}
+                      onChange={(e) => setSelectedPid(e.target.value)}
+                    />
+                    <span><strong>{proc.name}</strong> (PID: {proc.pid}) Footprint: <code>{proc.metrics_value}</code></span>
+                  </label>
+                    ))}
+              </div>
+            </div>
+          )}
           
           <div className="alert-action-footer">
             <span>Authorize internal execution mitigation framework tools?</span>
@@ -173,10 +248,10 @@ function Dashboard({ system, triggerRefresh }) {
       )}
 
       <section className="metrics">
-        <MetricCard icon={<Cpu />} title="CPU Usage" value={system ? `${system.cpu}%` : "--"} status={system?.cpu > 70 ? "STRESS" : "NORMAL"} />
-        <MetricCard icon={<Activity />} title="RAM Usage" value={system ? `${system.ram}%` : "--"} status={system?.ram > 80 ? "HIGH LOAD" : "NORMAL"} />
-        <MetricCard icon={<HardDrive />} title="Disk Usage" value={system ? `${system.disk}%` : "--"} status="NORMAL" />
-        <MetricCard icon={<Network />} title="Network Activity" value={system ? `${system.processes} Procs` : "--"} status="CONNECTED" />
+        <MetricCard icon={<Cpu />} title="CPU Usage" value={system ? `${system.cpu_usage}%` : "--"} status={system?.cpu_usage > 70 ? "STRESS" : "NORMAL"} />
+        <MetricCard icon={<Activity />} title="RAM Usage" value={system ? `${system.ram_usage}%` : "--"} status={system?.ram_usage > 80 ? "HIGH LOAD" : "NORMAL"} />
+        <MetricCard icon={<HardDrive />} title="Disk Usage" value={system ? `${system.disk_usage}%` : "--"} status="NORMAL" />
+        <MetricCard icon={<Network />} title="Network Activity" value={system ? `${system.process_count} Procs` : "--"} status="CONNECTED" />
       </section>
 
       <section className="visual-section">
@@ -188,7 +263,7 @@ function Dashboard({ system, triggerRefresh }) {
           <div className="live-badge"><span className="pulse"></span>LIVE</div>
         </div>
 
-        <div className="visual-layout">
+      <div className="visual-layout">
           <div className="three-container">
             <Suspense fallback={<div style={{ color: '#a78bfa', padding: '20px', fontFamily: 'Space Mono', fontSize: '12px' }}>Loading 3D Core...</div>}>
             <Infrastructure3D />
@@ -206,23 +281,14 @@ function Dashboard({ system, triggerRefresh }) {
               <div style={{ width: system?.agent_active_alert ? "72%" : "96%", backgroundColor: system?.agent_active_alert ? '#ff4a4a' : '#00ff88' }}></div>
             </div>
 
-            <HealthRow label="CPU Load Core" value={system ? `${system.CPU_Usage}%` : "--"} state={system?.CPU_Usage > 70 ? "Stress Mode" : "Stable Bounds"} />
-            <HealthRow label="RAM Capacity" value={system ? `${system.RAM_Usage}%` : "--"} state={system?.RAM_Usage > 80 ? "Throttling" : "Healthy Profile"} />
-            <HealthRow label="Disk Profiles" value={system ? `${system.Disk_Usage}%` : "--"} state="Optimal Allocation" />
-            
-            <div className="prediction-box" style={{ borderColor: system?.agent_active_alert ? '#ff4a4a' : '#1e293b' }}>
-              <div className="prediction-icon"><BrainCircuit size={20} /></div>
-              <div>
-                <span>AI FAILURE PREDICTION</span>
-                <strong>{system?.agent_active_alert ? "CRITICAL RISK PROFILE DETECTED" : "LOW RISK SPECTRUM"}</strong>
-                <small>Probability: {system?.agent_active_alert ? "89%" : "12%"}</small>
-              </div>
+            <HealthRow label="CPU Load Core" value={system ? `${system.cpu_usage}%` : "--"} state={system?.cpu_usage > 70 ? "Stress Mode" : "Stable Bounds"} />
+            <HealthRow label="RAM Capacity" value={system ? `${system.ram_usage}%` : "--"} state={system?.ram_usage > 80 ? "Throttling" : "Healthy Profile"} />
+            <HealthRow label="Disk Profiles" value={system ? `${system.disk_usage}%` : "--"} state="Optimal Allocation" />
+
             </div>
-          </div>
         </div>
       </section>
 
-    
       {system?.agent_active_alert && system?.agent_manual_steps?.length > 0 && (
         <section className="manual-steps-viewer">
           <h5>Manual Troubleshooting Backup Guidelines (If Auto-Fix Denied):</h5>
@@ -239,24 +305,24 @@ function LiveMonitor({ system }) {
   return (
     <div className="dashboard-grid-view">
       <section className="metrics">
-        <MetricCard icon={<Cpu />} title="Processor Load" value={system ? `${system.CPU_Usage}%` : "--"} status="REALTIME" />
-        <MetricCard icon={<Activity />} title="Memory Allocation" value={system ? `${system.RAM_Usage}%` : "--"} status="LIVE" />
-        <MetricCard icon={<HardDrive />} title="Storage Sectors" value={system ? `${system.Disk_Usage}%` : "--"} status="MOUNTED" />
+        <MetricCard icon={<Cpu />} title="Processor Load" value={system ? `${system.cpu_usage}%` : "--"} status="REALTIME" />
+        <MetricCard icon={<Activity />} title="Memory Allocation" value={system ? `${system.ram_usage}%` : "--"} status="LIVE" />
+        <MetricCard icon={<HardDrive />} title="Storage Sectors" value={system ? `${system.disk_usage}%` : "--"} status="MOUNTED" />
       </section>
 
       <div className="extended-telemetry-box">
         <h4>SIGNAL TELEMETRY MATRIX STRINGS</h4>
         <div className="telemetry-row">
           <span>Network Inbound:</span>
-          <strong>{system ?.Bytes_Recv ? `${(system.Bytes_Recv / (1024 * 1024)).toFixed(2)} MB` : "--"}</strong>
+          <strong>{system ?.bytes_recv ? `${(system.bytes_recv / (1024 * 1024)).toFixed(2)} MB` : "--"}</strong>
         </div>
         <div className="telemetry-row">
           <span>Network Outbound:</span>
-          <strong>{system ?.Bytes_Sent ? `${(system.Bytes_Sent / (1024 * 1024)).toFixed(2)} MB` : "--"}</strong>
+          <strong>{system ?.bytes_sent ? `${(system.bytes_sent / (1024 * 1024)).toFixed(2)} MB` : "--"}</strong>
         </div>
         <div className="telemetry-row">
           <span>Active Process Threads:</span>
-          <strong>{system ? system.Process_Count : "--"} count</strong>
+          <strong>{system ? system.process_count : "--"} count</strong>
         </div>
       </div>
     </div>
@@ -310,7 +376,7 @@ function Anomalies({ system }) {
   );
 }
 
-function AgenticAIView({ system, triggerRefresh }) {
+function AgenticAIView({ system }) {
   return (
     <div className="coming-soon">
       <Bot size={42} />
