@@ -15,7 +15,7 @@ API_KEY = os.environ.get("GCP_API_KEY")
 
 try:
     client = genai.Client(api_key=API_KEY)
-    ACTIVE_GEMINI_MODEL = 'gemini-2.5-flash'
+    ACTIVE_GEMINI_MODEL = 'gemini-3.8-flash'
 except Exception as e:
     print(f"Warning: Geminin Client initialization failed.Check your API key.Error: {e} ")
     client = None
@@ -262,7 +262,7 @@ class AgenticAIResolutionEngine:
         }}"""
 
         try:
-            # Gemini-2.5 model orchestration execution call
+            # Gemini-3.8 model orchestration execution call
             response = client.models.generate_content(
                 model='models/gemini-3.8-flash',
                 contents=prompt,

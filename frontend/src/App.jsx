@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect,useRef, Suspense } from "react";
 import {
   Activity,
   BrainCircuit,
@@ -25,36 +25,80 @@ function App() {
   const [system, setSystem] = useState(null);
   const [logs, setLogs] = useState([]);
   const [isOnline, setIsOnline] = useState(false);
+  const [alertPopup, setAlertPopup] = useState(null);
+  const lastAlertSignature = useRef("");
+  const alertTimer = useRef(null);
+  const [incidentPopup, setIncidentPopup] = useState(null);
+  const [manualGuide, setManualGuide] = useState(false);
+  const lastIncident = useRef("");
+
 
   const fetchSystemData = async () => {
     try {
       const data = await getSystemStatus();
-      if (data){ 
-      setSystem(data);
-      setIsOnline(true);
-      } else {
-        setIsOnline(false);
-      } 
-
-    } catch (error) {
-      console.error("API ERROR:", error);
+     if (!data) {
       setIsOnline(false);
+      return;
     }
-  };
 
-  const fetchAuditLogs = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/audit-logs");
-      const data = await res.json();
-      setLogs(data.reverse());
-    } catch (e) {
-      console.error(e);
+    setSystem(data);
+    setIsOnline(true);
+
+
+    const cpu = Number(data.cpu_usage ?? 0);
+    const ram = Number(data.ram_usage ?? 0);
+    const disk = Number(data.disk_usage ?? 0);
+    
+    const issues = [];
+
+    if (cpu >= 75) {
+      issues.push(`High CPU usage: ${cpu.toFixed(1)}%`);
     }
-  };
+
+    if (ram >= 80) {
+      issues.push(`High RAM usage: ${ram.toFixed(1)}%`);
+    }
+
+    if (disk >= 90) {
+      issues.push(`High disk utilisation: ${disk.toFixed(1)}%`);
+    }
+
+    if (Number(data.model_isolation_anomaly) === 1) {
+      issues.push("Isolation Forest detected an anomaly");
+    }
+
+    if (Number(data.model_future_risk) === 1) {
+      issues.push("ML model predicts elevated risk");
+    }
+
+    const signature = issues.join(" | ");
+
+    if (signature && signature !== lastIncident.current) {
+      lastIncident.current = signature;
+
+      setIncidentPopup({
+        issues,
+        cpu,
+        ram,
+        disk
+      });
+    }
+
+    if (!signature) {
+      lastIncident.current = "";
+    }
+  } catch (error) {
+    console.error("API ERROR:", error);
+    setIsOnline(false);
+  }
+};
+
+      if (alertTimer.current) {
+        clearTimeout(alertTimer.current);
+      }
 
   useEffect(() => {
     fetchSystemData();
-    fetchAuditLogs();
     const interval = setInterval(() => {
       fetchSystemData();
       if (activePage === "System Logs") fetchAuditLogs();
@@ -125,6 +169,7 @@ function App() {
       </aside>
 
       <main className="main">
+
         <header className="topbar">
           <div>
             <p className="eyebrow">AUTONOMOUS INFRASTRUCTURE</p>
@@ -156,6 +201,144 @@ function App() {
         {activePage === "System Logs" && <SystemLogs />}
         </>
         )}
+
+        <button
+  onClick={() =>
+    setIncidentPopup({
+      issues: ["TEST ALERT: High RAM usage detected"],
+      cpu: 68.8,
+      ram: 83.3,
+      disk: 70.3,
+    })
+  }
+  style={{
+    position: "fixed",
+    bottom: "20px",
+    right: "20px",
+    zIndex: 200000,
+    padding: "12px 18px",
+    background: "#7655e8",
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    cursor: "pointer",
+  }}
+>
+  Test Alert Popup
+</button>
+
+{incidentPopup && (
+  <div
+    role="dialog"
+    aria-modal="true"
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 100001,
+      background: "rgba(0,0,0,0.8)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "20px",
+    }}
+  >
+    <div
+      style={{
+        background: "#101426",
+        color: "white",
+        border: "1px solid #ff4a4a",
+        borderRadius: "16px",
+        padding: "28px",
+        width: "min(500px, 100%)",
+        boxSizing: "border-box",
+      }}
+    >
+      <h2 style={{ color: "#ff7777" }}>
+        <AlertTriangle
+          size={24}
+          style={{ verticalAlign: "middle", marginRight: "10px" }}
+        />
+        System Anomaly Detected
+      </h2>
+
+      <ul style={{ lineHeight: 1.8 }}>
+        {incidentPopup.issues.map((issue, index) => (
+          <li key={index}>{issue}</li>
+        ))}
+      </ul>
+
+      <p>CPU: {incidentPopup.cpu.toFixed(1)}%</p>
+      <p>RAM: {incidentPopup.ram.toFixed(1)}%</p>
+      <p>Disk: {incidentPopup.disk.toFixed(1)}%</p>
+
+      <p>How would you like to resolve this issue?</p>
+
+      <button
+        onClick={() => {
+          setIncidentPopup(null);
+          setActivePage("Agentic AI");
+        }}
+        style={{
+          width: "100%",
+          padding: "12px",
+          background: "#7655e8",
+          color: "white",
+          border: "none",
+          borderRadius: "8px",
+          cursor: "pointer",
+          marginBottom: "10px",
+        }}
+      >
+        Ask AI Agent for Assistance
+      </button>
+
+      <button
+        onClick={() => {
+          setIncidentPopup({
+            ...incidentPopup,
+            showManual: true,
+          });
+        }}
+        style={{
+          width: "100%",
+          padding: "12px",
+          background: "#1e293b",
+          color: "white",
+          border: "1px solid #64748b",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
+      >
+        I'll Handle It Myself
+      </button>
+
+      {incidentPopup.showManual && (
+        <div style={{ marginTop: "18px", lineHeight: 1.7 }}>
+          <h3>Manual Troubleshooting</h3>
+          <ol>
+            <li>Press Ctrl + Shift + Esc to open Task Manager.</li>
+            <li>Check which applications are using the most memory.</li>
+            <li>Save your work before closing unnecessary applications.</li>
+            <li>Return to the dashboard to monitor the metrics.</li>
+          </ol>
+        </div>
+      )}
+
+      <button
+        onClick={() => setIncidentPopup(null)}
+        style={{
+          marginTop: "16px",
+          background: "transparent",
+          color: "#94a3b8",
+          border: "none",
+          cursor: "pointer",
+        }}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
       </main>
     </div>
   );
@@ -183,7 +366,7 @@ function Dashboard({ system, triggerRefresh }) {
       const response = await fetch("http://localhost:8000/action-confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ decision: userChoice })
+        body: JSON.stringify({ payload })
       });
       const data = await response.json();
       setActionMessage(data.result);
@@ -345,36 +528,141 @@ function Predictions({ system }) {
             <span style={{ color: '#00ff88' }}>HEALTH SPECTRUM CLEAR</span>
           )}
         </p>
-        <small className="info-text">
-          Model dynamically weighs parameters using SHAP value attribution algorithms to parse performance deviations.
-        </small>
-         </div>
+
+        {system?.live_shap_explanations?.length > 0 && (
+          <div className="shap-explanation-panel" style={{ marginTop: '20px', background: '#0b1329', padding: '15px', borderRadius: '6px' }}>
+           <h5 style={{ color: "#a78bfa", marginBottom: "10px" }}>Live Feature Attributions (Proxy SHAP Weights)</h5>
+            {system.live_shap_explanations.map((exp, idx) => (
+              <div key={idx} style={{ display: "flex", justifyContent: "space-between", padding: "5px 0", borderBottom: "1px solid #1e293b" }}>
+                <span>{exp.feature} ({exp.value})</span>
+                <strong style={{ color: exp.impact?.startsWith("+") ? "#ff4a4a" : "#4aff4a" }}>
+                  {exp.impact}
+                </strong>
+              </div>
+            ))}
+          </div> 
+                  )}
+      </div>
     </div>
   );
 }
 
+
 function Anomalies({ system }) {
+  const cpu = Number(system?.cpu_usage ?? 0);
+  const ram = Number(system?.ram_usage ?? 0);
+  const disk = Number(system?.disk_usage ?? 0);
+  const mlAnomaly = Number(system?.model_isolation_anomaly ?? 0) === 1;
+  const highCpu = cpu >= 75;
+  const highRam = ram >= 80;
+  const highDisk = disk >= 90;
+  const alerts = [];
+
+  if (mlAnomaly) {
+    alerts.push({
+      title: "Isolation Forest Anomaly",
+      detail: "The ML model detected an unusual system metric pattern.",
+    });
+  }
+
+  if (highCpu) {
+    alerts.push({
+      title: "High CPU Usage",
+      detail: `CPU usage is ${cpu.toFixed(1)}%. Threshold: 75%.`,
+    });
+  }
+
+  if (highRam) {
+    alerts.push({
+      title: "High RAM Usage",
+      detail: `RAM usage is ${ram.toFixed(1)}%. Threshold: 80%.`,
+    });
+  }
+
+  if (highDisk) {
+    alerts.push({
+      title: "High Disk Usage",
+      detail: `Disk usage is ${disk.toFixed(1)}%. Threshold: 90%.`,
+    });
+  }
+
+  const hasAlerts = alerts.length > 0;
+
   return (
     <div className="extended-telemetry-box">
       <div className="panel-title">
-        <ShieldAlert size={22} color="#ff4a4a" />
-        <span>ISOLATION FOREST REALTIME OUTLIER LOGS</span>
+        <ShieldAlert
+          size={22}
+          color={hasAlerts ? "#ff4a4a" : "#00ff88"}
+        />
+        <span>SYSTEM ANOMALY & RESOURCE ALERTS</span>
       </div>
       <div className="outlier-status-layout">
-        <div className="big-stat-number" style={{ color: system?.agent_active_alert ? '#ff4a4a' : '#cbd5e1' }}>
-          {system?.agent_active_alert ? "1" : "0"}
-          <span style={{ fontSize: '1rem', display: 'block', color: '#94a3b8' }}>ACTIVE ISOLATION ANOMALIES</span>
+        <div className="big-stat-number" style={{ color: hasAlerts ? "#ff4a4a" : "#00ff88", }}>
+          {alerts.length}
+          <span
+            style={{
+              fontSize: "1rem",
+              display: "block",
+              color: "#94a3b8",
+            }}
+          >
+            ACTIVE SYSTEM ALERTS
+          </span>
         </div>
-        <div className="outlier-alert-message">{system?.agent_active_alert ? (
-            <p>Machine parameters are currently operating outside learned multi-dimensional statistical boundaries.</p>
+
+        <div className="outlier-alert-message">
+          {hasAlerts ? (
+            <div>
+              <h3 style={{ color: "#ff7777" }}>
+                System Attention Required
+              </h3>
+
+              {alerts.map((alert, index) => (
+                <div
+                  key={index}
+                  style={{
+                    marginTop: "16px",
+                    padding: "14px",
+                    border: "1px solid #7f1d1d",
+                    borderRadius: "8px",
+                     background: "#25111b",
+                  }}
+                >
+                  <strong style={{ color: "#ff7777" }}>
+                    <AlertTriangle
+                      size={16}
+                      style={{
+                        verticalAlign: "middle",
+                        marginRight: "8px",
+                      }}
+                    />
+
+                    {alert.title}
+                  </strong>
+
+                  <p style={{ marginBottom: 0 }}>
+                    {alert.detail}
+                  </p>
+                </div>
+              ))}
+
+              <p style={{ marginTop: "18px", color: "#cbd5e1" }}>
+                ML anomaly detected: {mlAnomaly ? "YES" : "NO"}
+              </p>
+            </div>
           ) : (
-            <p>All metric vectors match standard operational cluster benchmarks.</p>
-          )}
+            <p style={{ color: "#00ff88" }}>
+              No resource threshold alerts or Isolation Forest
+              anomalies detected at this moment.
+            </p>
+                  )}
         </div>
       </div>
     </div>
   );
 }
+
 
 function AgenticAIView({ system }) {
   return (
@@ -395,12 +683,40 @@ function AgenticAIView({ system }) {
 
 function SystemLogs() {
 return (
-  <div className="system-logs">
-      <h4>Audit Stream Archive</h4>
-      <p>System configuration mappings logged in 'agent_operations_log.json'.</p>
+  <div className="extended-telemetry-box" style={{ overflowX: "auto" }}>
+      <h4>Live Incident & Audit Trail Records</h4>
+      <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "15px", textAlign: "left" }}>
+        <thead>
+          <tr style={{ color: "#a78bfa", borderBottom: "2px solid #1e293b" }}>
+            <th style={{ padding: "8px" }}>Timestamp</th>
+            <th style={{ padding: "8px" }}>Action Type</th>
+            <th style={{ padding: "8px" }}>Status</th>
+            <th style={{ padding: "8px" }}>Outcome Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {!logs || logs.length === 0 ? (
+            <tr>
+              <td colSpan={4} style={{ padding: "10px", color: "#94a3b8", textAlign: "center" }}>
+                No recorded events found in agent_operations_log.json. Trigger an action to log here.
+              </td>
+            </tr>
+          ) : (
+            logs.map((log, idx) => (
+              <tr key={idx} style={{ borderBottom: "1px solid #1e293b", fontSize: "13px" }}>
+                <td style={{ padding: "8px", color: "#60a5fa", fontFamily: "monospace" }}>{log.Timestamp}</td>
+                <td style={{ padding: "8px", fontWeight: "bold" }}>{log.action_type}</td>
+                <td style={{ padding: "8px", color: log.status === "Success" ? "#4aff4a" : "#ffb84d" }}>{log.status}</td>
+                <td style={{ padding: "8px", color: "#cbd5e1" }}>{log.details}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+        </table>
     </div>
   );
 }
+
 
 function MetricCard({ icon, title, value, status }) {
   return (
